@@ -1,58 +1,17 @@
-#-- to maintain state
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "=2.69.0"
-    }
-  } 
-  #  backend "azurerm" {}
-  #  required_version = ">= 0.13"
+resource "azurerm_resource_group" "tf" {
+
+    name        = var.resource_group_name
+    location    = var.location
+
 }
 
-locals {
-  tags = {
-    Customer           = var.customer
-    BusinessUnit       = var.business_unit
-    ApplicationName    = var.applicationname
-    DataClassification = var.data_classification
-    ApproverName       = var.approver_name
-    Environment        = var.environment
-    Contact            = var.contact
-    region             = var.region
-    environment_short  = var.environment_short
-
+resource "azurerm_virtual_network" "tf" {
+  name                  =  var.vnet_name
+  resource_group_name   =  azurerm_resource_group.tf.name
+  location              =  azurerm_resource_group.tf.location
+  address_space         = ["${var.vnet_address}"]
+  
+  subnet {
+    name                = var.subnet_name
+    address_prefix      = var.subnet_address_prefix
   }
-}
-
-module "azurerm_rg_transit" {
-  source   ="../resources/ResourceGroup_module"
-  name     = lower(join("-", ["rg", var.region, var.business_unit, var.environment_short, var.resource_group]))
-  location = var.location
-
-  tags = merge(
-    local.tags,
-    {
-      "Name" = lower(join("-", ["rg", var.region, var.business_unit, var.environment_short, var.environment]))
-    }
-  )
-  
-}
-
-
-module "azurerm_vnet_transit" {
-  source                  = "../resources/VNet_module"
-  resource_group_name     = module.azurerm_rg_transit.resource_group_name
-  name                    = lower(join("-", ["vnet", var.region, var.business_unit, var.environment_short, var.resource_group]))
-  addressSpace            = var.vnet_transit_addressspace
-  
-  depends_on              = [module.azurerm_rg_transit]
-
-  tags = merge(
-    local.tags,
-    {
-      "Name" = lower(join("-", ["vnet", var.region, var.business_unit, var.environment_short, var.environment]))
-    }
-  )
-
-}
