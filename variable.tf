@@ -1,61 +1,35 @@
-variable "virtual_network" {}
 
-variable "resource_group" {}
+variable "client_id" {
+   
+}
+variable "client_secret" {
+    
+}
+variable "tenant_id" {
+    
+}
+variable "subscription_id" {
+    
+}
 
-variable "location" {}
+variable "resource_group_name" {
+    default = "tf_rg"
 
-variable "region" {
+}
+variable "location" {
+    default = "southcentralus"
   
 }
 
-variable "vnet_transit_addressspace" {}
-
-
-
-variable "environment_short" {
-  default = ""
+variable "vnet_name" {
+    default = "tfVnet"
 }
-
-
-
-###################################################
-# TAGs
-###################################################
-
-variable "customer" {
-  type = string
+variable "vnet_address" {
+    default = "10.20.0.0/16"
 }
-
-variable "environment" {
-  type = string
+variable "subnet_name" {
+    default = "tfsubnet1"
 }
-
-variable "business_unit" {
-  type = string
+variable "subnet_address_prefix" {
+    default = "10.20.0.0/25"
 }
-
-variable "applicationname" {
-  type = string
-}
-
-variable "applicationname_short" {
-  type = string
-}
-
-variable "approver_name" {
-  type = string
-}
-
-variable "owner_name" {
-  type = string
-}
-
-variable "data_classification" {
-  type = string
-}
-
-variable "contact" {
-  type = string
-}
-
-
